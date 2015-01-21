@@ -1,0 +1,64 @@
+package com.studentprofile.view;
+
+import com.studentprofile.StudentProfileMain;
+import com.studentprofile.controller.ModuleMarkCollector;
+
+import javax.swing.*;
+
+import java.awt.*;
+
+public final class InputMarkSecondModulePanel extends JPanel implements ModuleMarkInterface  {
+    private final JLabel lblSecondModule;
+    private final JTextField txtSecondModuleCourseWorkMark;
+    private final JTextField txtSecondModuleExamMark;
+
+    public InputMarkSecondModulePanel() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoading second module panel components.\n";
+
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        //	this.setSize();
+
+        lblSecondModule = new JLabel("No Profile");
+        txtSecondModuleCourseWorkMark = new JTextField(2);
+        txtSecondModuleExamMark = new JTextField(2);
+
+        txtSecondModuleCourseWorkMark.setDocument(new TextFieldLengthRestriction());
+        txtSecondModuleExamMark.setDocument(new TextFieldLengthRestriction());
+        gbc.insets = new Insets(2, 2, 2, 40);
+
+        gbc.weightx = 0.99;
+        gbc.anchor = GridBagConstraints.WEST;
+        this.add(lblSecondModule, gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 0.001;
+        gbc.insets = new Insets(2, 2, 2, 30);
+        this.add(txtSecondModuleCourseWorkMark, gbc);
+        gbc.gridx = 2;
+        this.add(txtSecondModuleExamMark, gbc);
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoaded second module panel components.\n";
+
+    }
+
+    public void addSecondModuleMarks() {
+        ModuleMarkCollector.moduleMarkList.add(txtSecondModuleCourseWorkMark.getText());
+        ModuleMarkCollector.moduleMarkList.add(txtSecondModuleExamMark.getText());
+    }
+    
+    @Override
+    public void setTextFields(String cwkField, String examField) {
+    	txtSecondModuleCourseWorkMark.setText(cwkField);
+    	txtSecondModuleExamMark.setText(examField);
+    }
+
+    @Override
+    public void setLabelText(String newText) {
+        lblSecondModule.setText(newText);
+    }
+    
+    @Override
+    public void clearTextFields() {
+        txtSecondModuleCourseWorkMark.setText("");
+        txtSecondModuleExamMark.setText("");
+    }
+}

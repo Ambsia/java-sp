@@ -1,0 +1,13 @@
+package com.studentprofile.view;
+
+import javax.swing.JPanel;
+
+public class moduleMarkJPanel extends JPanel {
+
+	public moduleMarkJPanel() {
+
+	}
+	public void setTextFields(String cwkField, String examField) {
+		
+	}
+}

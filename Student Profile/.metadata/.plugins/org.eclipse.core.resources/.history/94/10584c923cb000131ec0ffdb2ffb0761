@@ -1,0 +1,68 @@
+package com.studentprofile.view;
+
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+
+import com.studentprofile.StudentProfileMain;
+import com.studentprofile.controller.ModuleMarkCollector;
+
+public final class InputMarkFirstModulePanel extends JPanel {
+	private JLabel lblFirstModule;
+	private JTextField txtFirstModuleCourseWorkMark;
+	private JTextField txtFirstModuleExamMark;
+	public InputMarkFirstModulePanel() {
+		StudentProfileMain.loadingPhaseString+="\t\t\t\t\tLoading first module panel components.\n";
+
+		this.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		lblFirstModule = new JLabel("No Profile");
+		txtFirstModuleCourseWorkMark = new JTextField(2);
+		txtFirstModuleExamMark = new JTextField(2);
+
+		txtFirstModuleCourseWorkMark.setDocument(new TextFieldLengthRestriction(2));
+		txtFirstModuleExamMark.setDocument(new TextFieldLengthRestriction(2));
+		
+		gbc.insets = new Insets(2, 2, 2, 40);
+		
+		gbc.weightx = 0.99;
+		gbc.anchor = GridBagConstraints.WEST;
+		this.add(lblFirstModule,gbc);
+		
+		gbc.gridx = 1;
+		gbc.weightx = 0.001;
+		gbc.insets = new Insets(2, 2, 2, 30);
+		this.add(txtFirstModuleCourseWorkMark,gbc);
+		gbc.gridx = 2;
+		this.add(txtFirstModuleExamMark,gbc);
+		
+		
+		StudentProfileMain.loadingPhaseString+="\t\t\t\t\tLoaded first module panel components.\n";
+
+
+	}
+
+	public void addFirstModuleMarks() {
+		
+		ModuleMarkCollector.moduleMarkList.add(txtFirstModuleCourseWorkMark.getText());
+		ModuleMarkCollector.moduleMarkList.add(txtFirstModuleExamMark.getText());
+	}
+	
+	public void setLabelText(String newText) {
+		lblFirstModule.setText(newText);
+	}
+	
+	public void clearTextFields() {
+		txtFirstModuleCourseWorkMark.setText("");
+		txtFirstModuleExamMark.setText("");
+	}
+
+}

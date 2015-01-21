@@ -1,0 +1,63 @@
+package com.studentprofile.view;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import com.studentprofile.StudentProfileMain;
+
+/** This class extends JPanel and is used as one of the panels that
+ *  are added to the second tab, this panel represents the footer
+ *  panel. This class has functionality to add a action listener
+ *  to each of the buttons.  */
+public final class InputMarkFooterPanel extends JPanel {
+	//fields
+    private final JButton btnSubmit;
+    private final JButton btnClear;
+    
+    /** Constructor instantiates each button and adds them to 
+     * this panel using GridBagLayout and GridBagConstraints 
+     * to position each of the controls. 
+     * */
+    public InputMarkFooterPanel() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoading footer panel components.\n";
+        btnSubmit = new JButton("Submit");
+        btnClear = new JButton("Clear");
+
+
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 80);
+
+ 
+        this.add(btnSubmit, gbc);
+        gbc.gridx = 1;
+        gbc.insets = new Insets(2, 2, 2, 2);
+        this.add(btnClear, gbc);
+
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoaded footer panel components.\n";
+    }
+
+ 
+    /** void addSubmitListener, adds an action listener to
+     * btnSubmit.
+     * @param al the action listener handler to be used. 
+     * */
+    public void addSubmitListener(ActionListener al) {
+    	btnSubmit.addActionListener(al);
+    }
+    
+    /** void addClearListener, adds an action listener to
+     * btnClear.
+     * @param al the action listener handler to be used. 
+     * */
+    public void addClearListener(ActionListener al) {
+        btnClear.addActionListener(al);
+    }
+    
+   
+}

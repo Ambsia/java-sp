@@ -1,0 +1,127 @@
+package com.studentprofile.view;
+
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+
+import com.studentprofile.StudentProfileMain;
+import com.studentprofile.model.Course;
+
+
+public final class InputStudentPanelLoader extends JPanel {
+
+
+    private final JTextField txtStudentName;
+    private final JTextField txtStudentPNumber;
+    private final JComboBox<Course> cmbCourseList;
+    private final JButton btnSubmit;
+    private final JButton btnClear;
+    private final JPanel txtNameErrorPanel = new JPanel();
+    private final JPanel txtPNumberErrorPanel = new JPanel();
+    private final Border border = BorderFactory.createLineBorder(Color.red);
+    
+
+    public InputStudentPanelLoader() {
+
+        StudentProfileMain.loadingPhaseString += "\t\t\tLoading first tab components.\n";
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 40);
+        txtStudentName = new JTextField(13);
+        txtStudentName.setToolTipText("Enter name.");
+        txtNameErrorPanel.add(txtStudentName);
+
+        txtStudentPNumber = new JTextField(13);
+        txtStudentPNumber.setToolTipText("Enter Personal ID Number PXXXXXXX.");
+        txtPNumberErrorPanel.add(txtStudentPNumber);
+        cmbCourseList = new JComboBox<Course>();
+        cmbCourseList.setToolTipText("Choose course.");
+
+        btnSubmit = new JButton("Create Profile");
+        btnClear = new JButton("Clear");
+
+        this.add(new JLabel("Name:"), gbc);
+        gbc.gridx = 1;
+        this.add(txtNameErrorPanel, gbc);
+        gbc.gridx = 0;
+
+        gbc.gridy = 1;
+        this.add(new JLabel("P number:"), gbc);
+        gbc.gridx = 1;
+        this.add(txtPNumberErrorPanel, gbc);
+        gbc.gridx = 0;
+
+        gbc.gridy = 2;
+
+        this.add(new JLabel("Choose course:"), gbc);
+        gbc.gridx = 1;
+        this.add(cmbCourseList, gbc);
+
+        gbc.insets = new Insets(30, 2, 2, 2);
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        this.add(btnSubmit, gbc);
+        gbc.gridx = 1;
+        this.add(btnClear, gbc);
+        StudentProfileMain.loadingPhaseString += "\t\t\tLoaded first tab components.\n";
+
+
+    }
+    
+    public void setNameErrorBorder(boolean borderActive) {
+    	if (borderActive) 
+    		txtNameErrorPanel.setBorder(border);
+    	else
+    		txtNameErrorPanel.setBorder(null);
+    }
+    public void setStudentPNumberErrorBorder(boolean borderActive) {
+      	if (borderActive) 
+      		txtPNumberErrorPanel.setBorder(border);
+    	else
+    		txtPNumberErrorPanel.setBorder(null);
+    }
+    public void setDefaultStudentDetails() {
+        txtStudentName.setText("");
+        txtStudentPNumber.setText("");
+        cmbCourseList.setSelectedIndex(0);
+    }
+
+
+    public String getStudentName() {
+        return txtStudentName.getText();
+    }
+
+    public String getStudentPNumber() {
+        return txtStudentPNumber.getText();
+    }
+
+    public Course getStudentCourse() {
+        return (Course) cmbCourseList.getSelectedItem();
+    }
+
+    public void addSubmitListener(ActionListener al) {
+        btnSubmit.addActionListener(al);
+    }
+
+    public void addClearListener(ActionListener al) {
+        btnClear.addActionListener(al);
+    }
+
+    public void populateComboBox(Course[] courses) {
+        for (Course c : courses) {
+            cmbCourseList.addItem(c);
+        }
+    }
+
+
+}

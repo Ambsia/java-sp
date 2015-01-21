@@ -1,0 +1,11 @@
+package com.studentprofile.view;
+
+public interface ModuleMarkInterface {
+	/** void setTextFields, sets the text fields to the parameters passed, respectively.
+	 * @param cwkField the string that the text field should be set to.
+	 * @param examField the string that the text field should be set to.*/
+	public void setTextFields(String cwkField, String examField);
+	public void setLabelText(String newText);
+	public void clearTextFields();
+}
+

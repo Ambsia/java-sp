@@ -1,0 +1,504 @@
+package com.studentprofile.controller;
+
+import com.studentprofile.StudentProfileMain;
+import com.studentprofile.model.Course;
+import com.studentprofile.model.Module;
+import com.studentprofile.model.StudentProfile;
+import com.studentprofile.view.*;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+/**
+ * This class is being used to handle events and logic of the application,
+ * this class has methods that populate the combo box, get overview results, check if a module was failed,
+ * this class also handles all events determined by user input.
+ */
+
+public final class Controller {
+	//declared fields
+	private final StudentProfileFrame mainFrame;
+	private final InputStudentPanelLoader inputStudentPanel;
+	private final InputMarkPanelLoader inputMarkPanel;
+	private final OutputPanelLoader outputPanel;
+	private final InputMarkPanels mainModulePanel;
+	private final InputMarkHeaderPanel moduleHeaderPanel;
+	private final InputMarkFirstModulePanel firstModulePanel;
+	private final InputMarkSecondModulePanel secondModulePanel;
+	private final InputMarkThirdModulePanel thirdModulePanel;
+	private final InputMarkFourthModulePanel fourthModulePanel;
+	private final TabbedPaneLoader tabbedPane;
+
+	private StudentProfile model;
+
+	private final ModuleMarkCollector moduleMarkCollector;
+
+	private static final String NEWLINE = "\n";
+	private static final String lines = "----------------------------------------------------------";
+	private ArrayList<ModuleMarkInterface> moduleMarkPanels;
+	private boolean studentCreated = false;
+	private boolean unsavedChangesMade = false;
+
+
+	/**
+	 * Controller constructor initialises all view components using
+	 * the get methods each of the components classes have. This constructor
+	 * also adds event listeners to all the view components that have user input and
+	 * populates the combo box by passing an array of courses to a method within input student panel.
+	 * Special functionality adds a window listener to the frame which calls a method when the frame
+	 * is being closed which checks if there are unsaved changes.
+	 *
+	 * @param view,  the current instance of view
+	 * @param model, the current instance of the model
+	 */
+	public Controller(StudentProfileFrame view, StudentProfile model) {
+		StudentProfileMain.loadingPhaseString += "\tLoading controller components.\n";
+		this.model = model;
+		tabbedPane = view.getTabbedPane();
+
+		moduleMarkCollector = new ModuleMarkCollector();
+
+		mainFrame = view.getMainFrame();
+		MenuBarLoader menuBar = view.getFrameMenuBar();
+		inputStudentPanel =tabbedPane.getInputStudentPanel();
+		inputMarkPanel = tabbedPane.getInputMarkPanel();
+		outputPanel = tabbedPane.getOutputPanel();
+		moduleMarkPanels = new ArrayList<ModuleMarkInterface>();
+
+		mainModulePanel = inputMarkPanel.getMainPanel();
+		moduleHeaderPanel = mainModulePanel.getHeaderPanel();
+		moduleMarkPanels.add(firstModulePanel = mainModulePanel.getFirstModulePanel());
+		moduleMarkPanels.add(secondModulePanel = mainModulePanel.getSecondModulePanel());
+		moduleMarkPanels.add(thirdModulePanel = mainModulePanel.getThirdModulePanel());
+		moduleMarkPanels.add(fourthModulePanel = mainModulePanel.getFourthModulePanel());
+		InputMarkFooterPanel footerButtonPanel = mainModulePanel.getFooterPanel();
+
+		inputStudentPanel.populateComboBox(this.setupAndGetCourses());
+
+		mainFrame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent we) {
+				checkForUnSavedChanges();
+			}
+		});
+
+		menuBar.getSaveMenuItem().addSaveListener(new SaveProfileHandler());
+		menuBar.getLoadMenuItem().addLoadListener(new LoadProfileHandler());
+		menuBar.getExitMenuItem().addExitListener(new ExitFrameHandler());
+		menuBar.getAboutMenuItem().addAboutListener(new AboutFrameHandler());
+
+		outputPanel.addSubmitListener(new SaveOverviewBoxHandler());
+
+		inputStudentPanel.addSubmitListener(new CreateProfileHandler());
+		inputStudentPanel.addClearListener(new ClearProfileHandler());
+
+		moduleHeaderPanel.addLoadMarkListener(new LoadMarkHandler());
+		footerButtonPanel.addSubmitListener(new InputMarksHandler());
+		footerButtonPanel.addClearListener(new ClearMarksHandler());
+		StudentProfileMain.loadingPhaseString += "\tLoaded controller components.\n";
+	}
+
+
+	/* All Handler classes implement the ActionListner which provides a method which will activate
+	 * every time the control using this class is clicked, I override this method so I can
+	 * specify what should happen.
+	 */
+
+	/**
+	 *
+	 */
+	private final class LoadMarkHandler implements ActionListener {
+		/**
+		 *
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int i = 0;
+			for (Module m : model.getCourse().getModules()) {
+				moduleMarkPanels.get(i).setTextFields(String.valueOf(m.getCwkMark()), String.valueOf(m.getExamMark()));
+				i++;
+			}
+		}
+	}
+
+
+	/**
+	 * This class is used as an action listener for the menu bar save profile item.
+	 */
+	private final class SaveProfileHandler implements ActionListener {
+		/**
+		 * Method actionPerformed, this method is called when a user clicks the menu item "save",
+		 * This method checks the boolean value to see if a profile was created and then tries to save the model.
+		 *
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (studentCreated) {
+				try {
+					if (model.saveToFile()) {
+						MessageBox.infoMessageBox("Profile: " + model.getpNumber() + " saved.");
+						unsavedChangesMade = false;
+					}
+				} catch (Exception excep) {
+					System.out.println(excep.toString());
+				}
+			} else {
+				MessageBox.errorMessageBox("You need to create a profile before you can save.");
+			}
+		}
+	}
+
+	/**
+	 * This class is used as an action listener for the menu bar load profile item.
+	 */
+	private final class LoadProfileHandler implements ActionListener {
+		/**
+		 * Method actionPerformed, this method is called  when a user clicks the menu item "load",
+		 * This method tries to load an instance of model into a local model, if it succeeds the model this class
+		 * has access too will become the loaded model. Coherently certain settings throughout the view are changed
+		 * to accompany the loaded profile model.
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				if (model.loadFromFile()) {
+					clearMarkFields();
+					moduleHeaderPanel.setLoadMarksVisibility(true);
+					unsavedChangesMade = false;
+					studentCreated = true;
+					inputMarkPanel.setProfileFound(model.getStudentName());
+					setUpAndGetModules();
+					tabbedPane.changeTab(2);
+					outputPanel.setTextField(getOverviewResult());
+					outputPanel.resetPosition();
+					MessageBox.infoMessageBox("Profile: " + model.getpNumber() + " loaded.");
+				}
+			} catch (ClassNotFoundException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
+
+	/**
+	 * This class is used as an action listener for the menu bar exit item.
+	 */
+	private final class ExitFrameHandler implements ActionListener {
+		/**
+		 * Method actionPerformed, this method is called when a user clicks the menu item "exit",
+		 * This method calls a method which checks if there are any unsaved changes.
+		 *
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			checkForUnSavedChanges();
+		}
+	}
+
+
+	/**
+	 * This class is used as an action listener for the menu bar about item.
+	 */
+	private final class AboutFrameHandler implements ActionListener {
+		/**
+		 * Method actionPerformed, this method is called when a user clicks the menu item "about",
+		 * This method opens a dialog showing information relative to what this application is and who created it.
+		 *
+		 */
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			MessageBox.infoMessageBox("Student Profile Application v1.0\nAuthor: Alex Boseley.");
+
+		}
+	}
+
+	/**
+	 * This class is used as an action listener for the student panel loader submit button .
+	 */
+	private final class CreateProfileHandler implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String studentName = inputStudentPanel.getStudentName();
+			String studentPNumber = inputStudentPanel.getStudentPNumber();
+			Course studentCourse = inputStudentPanel.getStudentCourse();
+
+			if (!studentName.equals("")) {
+				inputStudentPanel.setNameErrorBorder(false);
+				if (!studentPNumber.equals("")) {
+					moduleHeaderPanel.setLoadMarksVisibility(false);
+					clearMarkFields();
+					outputPanel.resetPanel();
+					unsavedChangesMade = true;
+					studentCreated = true;
+					inputStudentPanel.setDefaultStudentDetails();
+
+					model.setpNumber(studentPNumber);
+					model.setStudentName(studentName);
+					model.setCourse(studentCourse);
+
+					inputMarkPanel.setProfileFound(studentName);
+
+					outputPanel.setTextField(getStudentInformation());
+
+
+					setUpAndGetModules();
+
+					MessageBox.infoMessageBox("Account Created!");
+
+					System.out.println("profile created: " + model.toString());
+					tabbedPane.changeTab(1);
+
+				}
+				else {
+					inputStudentPanel.setStudentPNumberErrorBorder(true);
+					MessageBox.errorMessageBox("Please fill in all text fields, they have been marked in red.");
+				}
+			}
+			else {
+				inputStudentPanel.setNameErrorBorder(true);
+
+				if (studentPNumber.equals("")) {
+					inputStudentPanel.setStudentPNumberErrorBorder(true);
+					inputStudentPanel.setNameErrorBorder(true);
+					MessageBox.errorMessageBox("Please fill in all text fields, they have been marked in red.");
+				}
+				else {
+					inputStudentPanel.setStudentPNumberErrorBorder(false);
+					MessageBox.errorMessageBox("Please fill in all text fields, they have been marked in red.");
+				}
+			}
+		}
+	}
+
+
+	private final class InputMarksHandler implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			ArrayList<Integer> cwkMarkList;
+			ArrayList<Integer> examMarkList;
+			if (studentCreated) {
+				ModuleMarkCollector.moduleMarkList.clear();
+				cwkMarkList = moduleMarkCollector.getCwkWorkMarks();
+				examMarkList = moduleMarkCollector.getExamWorkMarks();
+				mainModulePanel.addMarks();
+				moduleMarkCollector.createMarkLists();
+				unsavedChangesMade = true;
+				if (!moduleMarkCollector.getLastRunWasException()) {
+					int i = 0;
+
+					for (Module moduleInCourse : model.getCourse().getModules()) {
+						moduleInCourse.setCwkMark(cwkMarkList.get(i));
+						moduleInCourse.setExamMark(examMarkList.get(i));
+						i++;
+					}
+
+					outputPanel.setTextField(getOverviewResult());
+					System.out.println("marks input: " + model.getCourse().getModules());
+					outputPanel.resetPosition();
+					tabbedPane.changeTab(2);
+				} else {
+					MessageBox.errorMessageBox(moduleMarkCollector.getException());
+				}
+			} else {
+				MessageBox.warningMessageBox();
+			}
+		}
+	}
+
+	private final class ClearMarksHandler implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			//	inputMarkPanel.setDefaultMarkFields();
+			clearMarkFields();
+
+		}
+	}
+
+	private final class ClearProfileHandler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			inputStudentPanel.setDefaultStudentDetails();
+		}
+	}
+
+	private final class SaveOverviewBoxHandler implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (studentCreated) {
+				JFileChooserLoader fileDialog = new JFileChooserLoader();
+
+				int returnVal = fileDialog.showSaveDialog(null);
+				if (returnVal == JFileChooserLoader.APPROVE_OPTION) {
+					File file = fileDialog.getSelectedFile();
+					try {
+						FileWriter fileWriter = new FileWriter(file + ".txt", true);
+
+						StringBuilder sb = new StringBuilder();
+						for (char c : outputPanel.getOverviewText().toCharArray()) {
+							sb.append(c);
+							if (c == '\n')
+								sb.append(System.getProperty("line.separator"));
+						}
+						fileWriter.write(sb.toString());
+						fileWriter.close();
+						MessageBox.infoMessageBox("Saving: " + file.getName() + ".");
+					} catch (IOException ioExcep) {
+						MessageBox.errorMessageBox("An Error occured while trying to save.");
+					}
+				} else {
+					MessageBox.infoMessageBox("Save canceled.");
+				}
+			} else {
+				MessageBox.errorMessageBox("You need to create a profile.");
+			}
+		}
+	}
+
+
+	private void checkForUnSavedChanges() {
+		if (unsavedChangesMade) {
+			int response = JOptionPane.showConfirmDialog(mainFrame, "Unsaved changes made are you sure you wish to exit?","Unsaved Changes", JOptionPane.YES_OPTION,JOptionPane.NO_OPTION);
+			if (response == JOptionPane.YES_OPTION) {
+				mainFrame.Exit();
+			}
+		} else
+			mainFrame.Exit();
+	}
+
+	private void clearMarkFields() {
+		firstModulePanel.clearTextFields();
+		secondModulePanel.clearTextFields();
+		thirdModulePanel.clearTextFields();
+		fourthModulePanel.clearTextFields();
+	}
+
+	private String getOverviewResult() {
+
+		String overviewText = "";
+		overviewText += getStudentInformation();
+		overviewText += getCourseInformation();
+		overviewText += getModuleResults();
+		return overviewText;
+	}
+
+	private String getStudentInformation() {
+		return "Student Name: " + model.getStudentName() + "." + NEWLINE + "Student P Number: " + model.getpNumber() + "." + NEWLINE +
+				lines + NEWLINE;
+	}
+
+	private String getCourseInformation() {
+		int average = model.getCourse().yearAverageMark();
+		String degree = "";
+		if (!modulesFailed()) {
+			outputPanel.setBackground(Color.green);
+			outputPanel.setLabelPassedFailedText("Passed!");
+
+			if (average > 40 && average < 50) {
+				degree = "Third-Class Honours";
+			} else if (average > 50 && average < 60) {
+				degree = "Lower Second-Class Honour";
+			} else if (average > 60 && average < 70) {
+				degree = "Upper Second-Class Honours";
+			} else if (average >= 70) {
+				degree = "First-Class Honours";
+			}
+		} else {
+			outputPanel.setBackground(Color.red);
+			outputPanel.setLabelPassedFailedText("Failed!");
+			degree = "Failed";
+		}
+		return "Course: " + model.getCourse() + NEWLINE + "Course total credits: " + model.getCourse().creditsPassed() + NEWLINE + "Course average mark: " + average + "%" + NEWLINE + degree + NEWLINE + lines + NEWLINE;
+	}
+
+	private String getModuleResults() {
+		String moduleResults = "Modules: ";
+		int moduleMark, moduleCwkMark, moduleExamMark;
+		String requireResetText, moduleCode, moduleName;
+		for (Module moduleInCourse : model.getCourse().getModules()) {
+			requireResetText = (model.getCourse().getModule(moduleInCourse.getModuleCode()).requireResit()) ? "FAILED; Resit required." : "Passed.";
+			moduleCode = model.getCourse().getModule(moduleInCourse.getModuleCode()).getModuleCode();
+			moduleName = model.getCourse().getModule(moduleInCourse.getModuleCode()).getModuleName();
+			moduleMark = model.getCourse().getModule(moduleInCourse.getModuleCode()).getModuleMark();
+			moduleCwkMark = model.getCourse().getModule(moduleInCourse.getModuleCode()).getCwkMark();
+			moduleExamMark = model.getCourse().getModule(moduleInCourse.getModuleCode()).getExamMark();
+
+			moduleResults += NEWLINE + "Module Code: " + moduleCode + "." + NEWLINE + "Module Name: " + moduleName + "." + NEWLINE +
+					"Module Course Work Mark: " + moduleCwkMark + "%" + "                              " + requireResetText + NEWLINE +
+					"Module Exam Mark: " + moduleExamMark + "%" + NEWLINE + "Module Mark: " + moduleMark + "%" + NEWLINE + NEWLINE;
+		}
+		return moduleResults;
+	}
+
+	boolean modulesFailed() {
+		for (Module moduleInCourse : model.getCourse().getModules()) {
+			if ((moduleInCourse.getModuleMark() < 40))
+				return true;
+		}
+		return false;
+	}
+
+	private Course[] setupAndGetCourses() {
+		Module ctec2121 = new Module("CTEC2121", "Organisations, Project Management and Research");
+		Module ctec2122 = new Module("CTEC2122", "Forensics and Security");
+		Module ctec2602 = new Module("CTEC2602", "OO Software Design and Development");
+		Module ctec2701 = new Module("CTEC2701", "Multi-tier Web Applications");
+		Module ctec2901 = new Module("CTEC2901", "Data Structures and Algorithms");
+		Module lawg2003 = new Module("LAWG2003", "Issues in Criminal Justice");
+
+		Course compSci = new Course("Computer Science");
+		compSci.addModule(ctec2121);
+		compSci.addModule(ctec2602);
+		compSci.addModule(ctec2701);
+		compSci.addModule(ctec2901);
+
+		Course softEng = new Course("Software Engineering");
+		softEng.addModule(ctec2121);
+		softEng.addModule(ctec2602);
+		softEng.addModule(ctec2701);
+		softEng.addModule(ctec2901);
+
+		Course compSecu = new Course("Computer Security");
+		compSecu.addModule(ctec2121);
+		compSecu.addModule(ctec2122);
+		compSecu.addModule(ctec2701);
+		compSecu.addModule(ctec2901);
+
+		Course forenComp = new Course("Forensic Computing");
+		forenComp.addModule(ctec2121);
+		forenComp.addModule(ctec2122);
+		forenComp.addModule(ctec2701);
+		forenComp.addModule(lawg2003);
+
+		Course[] courses = new Course[4];
+		courses[0] = compSci;
+		courses[1] = softEng;
+		courses[2] = compSecu;
+		courses[3] = forenComp;
+
+		return courses;
+	}
+
+	private void setUpAndGetModules() {
+		int i = 0;
+		for (Module moduleInCourse : model.getCourse().getModules()) {
+			moduleMarkPanels.get(i).setLabelText(moduleInCourse.getModuleCode() + " " + moduleInCourse.getModuleName());
+			i++;
+		}
+	}
+
+}
+
+

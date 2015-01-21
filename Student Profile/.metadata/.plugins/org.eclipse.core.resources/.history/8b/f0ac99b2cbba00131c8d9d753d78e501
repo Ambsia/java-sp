@@ -1,0 +1,18 @@
+package com.studentprofile.view;
+
+
+public interface ModuleMarkJPanel {
+
+	public void setTextFields(String cwkField, String examField);
+	public void setLabelText(String newText);
+	}
+/*public class moduleMarkJPanel extends JPanel {
+
+	public moduleMarkJPanel() {
+
+	}
+
+	public void setTextFields(String cwkField, String examField) { }
+
+	public void setLabelText(String newText) { }
+}*/

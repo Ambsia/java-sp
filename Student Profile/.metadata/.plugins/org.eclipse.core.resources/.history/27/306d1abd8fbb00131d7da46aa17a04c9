@@ -1,0 +1,38 @@
+package com.studentprofile.view;
+
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
+
+import com.studentprofile.controller.MessageBox;
+
+/** This class extends PlainDocument. This class is used to
+ * set each of the text fields with in the second tab (input marks)
+ * document type to TextFieldLengthRestriction,  */
+final class TextFieldRestriction extends PlainDocument {
+
+    private final int limit;
+
+    public TextFieldRestriction() {
+        this.limit = 3;
+    }
+
+
+    @Override
+	public void insertString(int offset, String s, javax.swing.text.AttributeSet a)
+            throws BadLocationException {
+
+        if (s == null)
+            return;
+        try {
+            Integer.parseInt(s);
+        } catch (Exception e) {
+            MessageBox.errorMessageBox("These fields only accept integers.");
+            super.remove(offset, 4);
+        }
+
+        if ((getLength() + s.length()) <= limit) {
+            super.insertString(offset, s, a);
+        }
+
+    }
+}

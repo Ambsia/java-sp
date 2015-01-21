@@ -1,0 +1,7 @@
+package com.studentprofile.view;
+
+public interface ModuleMarkInterface {
+	public void setTextFields(String cwkField, String examField);
+	public void setLabelText(String newText);
+}
+

@@ -1,0 +1,48 @@
+package com.studentprofile.view.markpanel;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import com.studentprofile.StudentProfileMain;
+
+
+public final class InputMarkPanelLoader extends JPanel {
+
+    private final InputMarkPanels panel;
+    private final JLabel lblProfileFound;
+
+    public InputMarkPanelLoader() {
+        StudentProfileMain.loadingPhaseString += "\t\t\tLoading second tab panels.\n";
+        panel = new InputMarkPanels();
+
+
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.insets = new Insets(2, 2, 25, 2);
+        lblProfileFound = new JLabel("No profile found, please load one or create one.");
+        this.add(lblProfileFound, gbc);
+
+        gbc.insets = new Insets(0, 0, 0, 0);
+        gbc.gridy = 1;
+        this.add(panel, gbc);
+
+
+        StudentProfileMain.loadingPhaseString += "\t\t\tLoaded second tab panels.\n";
+    }
+
+    public InputMarkPanels getMainPanel() {
+        return panel;
+    }
+
+
+    public void setProfileFound(String profileName) {
+        this.lblProfileFound.setText("Profile found: " + profileName + ".");
+    }
+
+
+}

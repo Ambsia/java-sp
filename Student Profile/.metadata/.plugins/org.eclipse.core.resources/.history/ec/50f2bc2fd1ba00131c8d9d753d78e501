@@ -1,0 +1,22 @@
+package com.studentprofile.controller;
+
+import javax.swing.*;
+
+public final class MessageBox {
+    public static void infoMessageBox(String message) {
+        show(message, "Information", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void errorMessageBox(String message) {
+        show("Error; " + message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+  //  public static void warningMessageBox() {
+  //      show("You need to create a profile.", "Warning", JOptionPane.WARNING_MESSAGE);
+  //  }
+
+    private static void show(String message, String title, int iconId) {
+        JOptionPane.showMessageDialog(null, message, title, iconId);
+    }
+
+}

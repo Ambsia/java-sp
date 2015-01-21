@@ -1,0 +1,50 @@
+package com.studentprofile.view;
+
+
+import javax.swing.JTabbedPane;
+
+import com.studentprofile.StudentProfileMain;
+import com.studentprofile.view.markpanel.InputMarkPanelLoader;
+import com.studentprofile.view.studentpanel.InputStudentPanelLoader;
+
+
+public final class TabbedPaneLoader extends JTabbedPane {
+    private final InputStudentPanelLoader firstTab;
+    private final InputMarkPanelLoader secondTab;
+    private final OutputPanelLoader thirdTab;
+
+    public TabbedPaneLoader() {
+
+        StudentProfileMain.loadingPhaseString += "\t\tGetting first tab.\n";
+        firstTab = new InputStudentPanelLoader();
+        StudentProfileMain.loadingPhaseString += "\t\tLoaded first tab.\n";
+        StudentProfileMain.loadingPhaseString += "\t\tGetting second tab.\n";
+        secondTab = new InputMarkPanelLoader();
+        StudentProfileMain.loadingPhaseString += "\t\tLoaded second tab.\n";
+        StudentProfileMain.loadingPhaseString += "\t\tGetting third tab.\n";
+        thirdTab = new OutputPanelLoader();
+        StudentProfileMain.loadingPhaseString += "\t\tLoaded third tab.\n";
+
+        this.addTab("Student Details", firstTab);
+        this.addTab("Input Marks", secondTab);
+        this.addTab("Overview", thirdTab);
+    }
+
+    public InputStudentPanelLoader getInputStudentPanel() {
+        return firstTab;
+    }
+
+    public InputMarkPanelLoader getInputMarkPanel() {
+        return secondTab;
+    }
+
+    public OutputPanelLoader getOutputPanel() {
+        return thirdTab;
+    }
+
+    public void changeTab(int index) {
+        this.setSelectedIndex(index);
+    }
+
+
+}

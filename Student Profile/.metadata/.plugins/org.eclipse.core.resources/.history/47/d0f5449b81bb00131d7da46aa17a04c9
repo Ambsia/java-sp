@@ -1,0 +1,26 @@
+package com.studentprofile.view;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+
+import com.studentprofile.StudentProfileMain;
+
+public final class JMenuAboutItem extends JMenuItem {
+
+    public JMenuAboutItem() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoading about item components.\n";
+        this.setText("About");
+        this.setMnemonic(KeyEvent.VK_A);
+        this.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded about item components.\n";
+    }
+
+
+    public void addAboutListener(ActionListener al) {
+        this.addActionListener(al);
+    }
+}

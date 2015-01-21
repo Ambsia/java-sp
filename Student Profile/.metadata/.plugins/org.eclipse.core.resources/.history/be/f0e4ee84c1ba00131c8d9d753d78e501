@@ -1,0 +1,43 @@
+package com.studentprofile.view;
+
+import com.studentprofile.StudentProfileMain;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+public final class InputMarkHeaderPanel extends JPanel {
+    private final JButton btnLoadMarks;
+
+    private static final long serialVersionUID = 1L;
+
+    public InputMarkHeaderPanel() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoading header panel components.\n";
+        btnLoadMarks = new JButton("Load Marks");
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.insets = new Insets(2, 2, 2, 40);
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.weightx = 0.9;
+        this.add(new JLabel("Module"), gbc);
+        gbc.insets = new Insets(2, 0, 2, 5);
+        gbc.weightx = 0.05;
+        gbc.gridx = 1;
+        this.add(new JLabel("Cwk Mark"), gbc);
+        gbc.gridx = 2;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        this.add(new JLabel("Exam Mark"), gbc);
+ 
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoaded header panel components.\n";
+
+    }
+    public void setLoadMarksVisibility(boolean visible) {
+    	btnLoadMarks.setVisible(visible);
+    }
+    public void addLoadMarkListener(ActionListener al) {
+    	btnLoadMarks.addActionListener(al);
+    }
+}

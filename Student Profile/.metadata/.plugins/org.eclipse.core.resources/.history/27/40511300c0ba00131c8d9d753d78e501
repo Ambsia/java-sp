@@ -1,0 +1,52 @@
+package com.studentprofile.controller;
+
+import java.util.ArrayList;
+
+public final class ModuleMarkCollector {
+
+	public static final ArrayList<String> moduleMarkList = new ArrayList<String>();
+	private final ArrayList<Integer> examMarkList;
+	private final ArrayList<Integer> cwkMarkList;
+	private boolean lastRunWasException = false;
+
+
+	public ModuleMarkCollector() {
+		examMarkList = new ArrayList<Integer>();
+		cwkMarkList = new ArrayList<Integer>();
+	}
+
+	public void createMarkLists() {
+		if (!lastRunWasException) {
+			cwkMarkList.clear();
+			examMarkList.clear();
+			try {
+				for (int i = 0; i < moduleMarkList.size(); i++) {
+					if (Integer.parseInt(moduleMarkList.get(i)) > 100)	{
+						lastRunWasException = true;
+					} else if (i % 2 == 0 && cwkMarkList.size() != 4) {
+						cwkMarkList.add(Integer.parseInt(moduleMarkList.get(i)));
+					} else if (examMarkList.size() != 4) {
+						examMarkList.add(Integer.parseInt(moduleMarkList.get(i)));
+					}
+				}
+			} catch (Exception e) {
+				lastRunWasException = true;
+			}
+		} else {
+			lastRunWasException = false;
+			createMarkLists();
+		}
+	}
+
+	public boolean getLastRunWasException() {
+		return lastRunWasException;
+	}
+
+	public ArrayList<Integer> getCwkWorkMarks() {
+		return cwkMarkList;
+	}
+
+	public ArrayList<Integer> getExamWorkMarks() {
+		return examMarkList;
+	}
+}

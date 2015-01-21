@@ -1,0 +1,86 @@
+package com.studentprofile.view;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import javax.swing.JPanel;
+
+import com.studentprofile.StudentProfileMain;
+
+public class InputMarkPanels extends JPanel {
+    private final InputMarkFirstModulePanel firstModulePanel;
+    private final InputMarkSecondModulePanel secondModulePanel;
+    private final InputMarkThirdModulePanel thirdModulePanel;
+    private final InputMarkFourthModulePanel fourthModulePanel;
+    private final InputMarkFooterPanel footer;
+    private final InputMarkHeaderPanel header;
+    public InputMarkPanels() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting header panel.\n";
+        header = new InputMarkHeaderPanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded header panel.\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting footer panel.\n";
+        footer = new InputMarkFooterPanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded footer panel\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting first module panel\n";
+        firstModulePanel = new InputMarkFirstModulePanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded first module panel\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting second module panel\n";
+        secondModulePanel = new InputMarkSecondModulePanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded second module panel\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting third module panel\n";
+        thirdModulePanel = new InputMarkThirdModulePanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded third module panel\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting fourth module panel\n";
+        fourthModulePanel = new InputMarkFourthModulePanel();
+
+
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+       // gbc.fill = GridBagConstraints.BOTH;
+
+        //this.setPreferredSize(new Dimension(300,500));
+        gbc.gridy = 0;
+        this.add(header, gbc);
+        gbc.gridy = 1;
+        this.add(firstModulePanel, gbc);
+        gbc.gridy = 2;
+        this.add(secondModulePanel, gbc);
+        gbc.gridy = 3;
+        this.add(thirdModulePanel, gbc);
+        gbc.gridy = 4;
+        this.add(fourthModulePanel, gbc);
+        gbc.gridy = 6;
+        this.add(footer, gbc);
+
+    }
+
+    public void addMarks() {
+        firstModulePanel.addFirstModuleMarks();
+        secondModulePanel.addSecondModuleMarks();
+        thirdModulePanel.addThirdModuleMarks();
+        fourthModulePanel.addFourthModuleMarks();
+    }
+
+    public InputMarkHeaderPanel getHeaderPanel() {
+    	return header;
+    }
+    public InputMarkFirstModulePanel getFirstModulePanel() {
+        return firstModulePanel;
+    }
+
+    public InputMarkSecondModulePanel getSecondModulePanel() {
+        return secondModulePanel;
+    }
+
+    public InputMarkThirdModulePanel getThirdModulePanel() {
+        return thirdModulePanel;
+    }
+
+    public InputMarkFourthModulePanel getFourthModulePanel() {
+        return fourthModulePanel;
+    }
+
+    public InputMarkFooterPanel getFooterPanel() {
+        return footer;
+    }
+}

@@ -1,0 +1,9 @@
+package com.studentprofile.view;
+
+public class moduleMarkJPanel extends JPanel {
+	
+	public moduleMarkJPanel() {
+		
+	}
+
+}

@@ -1,0 +1,60 @@
+package com.studentprofile.view;
+
+import com.studentprofile.StudentProfileMain;
+import com.studentprofile.controller.ModuleMarkCollector;
+
+import javax.swing.*;
+
+import java.awt.*;
+
+public final class InputMarkThirdModulePanel extends moduleMarkJPanel {
+
+    private final JLabel lblThirdModule;
+    private final JTextField txtThirdModuleCourseWorkMark;
+    private final JTextField txtThirdModuleExamMark;
+
+    public InputMarkThirdModulePanel() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoading third module panel components.\n";
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        lblThirdModule = new JLabel("No Profile");
+        txtThirdModuleCourseWorkMark = new JTextField(2);
+        txtThirdModuleExamMark = new JTextField(2);
+
+        txtThirdModuleCourseWorkMark.setDocument(new TextFieldLengthRestriction());
+        txtThirdModuleExamMark.setDocument(new TextFieldLengthRestriction());
+
+        gbc.insets = new Insets(2, 2, 2, 40);
+
+        gbc.weightx = 0.99;
+        gbc.anchor = GridBagConstraints.WEST;
+        this.add(lblThirdModule, gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 0.001;
+        gbc.insets = new Insets(2, 2, 2, 30);
+        this.add(txtThirdModuleCourseWorkMark, gbc);
+        gbc.gridx = 2;
+        this.add(txtThirdModuleExamMark, gbc);
+
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoaded third module panel components.\n";
+    }
+
+    public void addThirdModuleMarks() {
+        ModuleMarkCollector.moduleMarkList.add(txtThirdModuleCourseWorkMark.getText());
+        ModuleMarkCollector.moduleMarkList.add(txtThirdModuleExamMark.getText());
+    }
+    public void setTextFields(String cwkField, String examField) {
+    	txtThirdModuleCourseWorkMark.setText(cwkField);
+    	txtThirdModuleExamMark.setText(examField);
+    }
+    public void setLabelText(String newText) {
+        lblThirdModule.setText(newText);
+    }
+
+    public void clearTextFields() {
+        txtThirdModuleCourseWorkMark.setText("");
+        txtThirdModuleExamMark.setText("");
+    }
+
+}

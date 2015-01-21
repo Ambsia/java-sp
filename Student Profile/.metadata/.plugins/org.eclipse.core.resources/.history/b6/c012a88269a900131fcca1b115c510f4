@@ -1,0 +1,32 @@
+package com.studentprofile.view;
+
+import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.text.PlainDocument;
+
+
+public class OutputPanel extends JPanel  {
+
+	private JTextArea overviewResults;
+
+	public OutputPanel() {
+
+		//this.setLayout(new GridBagLayout());
+		//GridBagConstraints gbc = new GridBagConstraints();
+		//gbc.insets = new Insets(2, 2, 2, 40);
+
+		overviewResults=new JTextArea(new PlainDocument());
+		overviewResults.setEditable(false);
+		overviewResults.setRows(15);
+		overviewResults.setColumns(50);
+		overviewResults.setLineWrap(true);
+		overviewResults.setWrapStyleWord(true); 
+		
+		JScrollPane areaScrollPane = new JScrollPane(overviewResults);
+		areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+		this.add(areaScrollPane, gbc);
+
+	}
+}

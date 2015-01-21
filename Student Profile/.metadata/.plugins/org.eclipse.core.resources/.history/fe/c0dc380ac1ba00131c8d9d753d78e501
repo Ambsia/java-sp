@@ -1,0 +1,53 @@
+package com.studentprofile.view;
+
+import com.studentprofile.StudentProfileMain;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+public final class InputMarkFooterPanel extends JPanel {
+    private final JButton btnSubmit;
+    private final JButton btnClear;
+    private final JButton btnLoadMarks;
+
+    public InputMarkFooterPanel() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoading footer panel components.\n";
+        btnSubmit = new JButton("Submit");
+        btnClear = new JButton("Clear");
+        btnLoadMarks = new JButton("Load Marks");
+
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 80);
+
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        this.add(btnSubmit, gbc);
+        gbc.gridx = 1;
+        gbc.insets = new Insets(2, 2, 2, 2);
+        this.add(btnClear, gbc);
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.CENTER;
+        gbc.gridx = 0;
+        this.add(btnLoadMarks,gbc);
+
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoaded footer panel components.\n";
+    }
+
+    public void setLoadMarksVisibility(boolean visible) {
+    	btnLoadMarks.setVisible(visible);
+    }
+    
+    public void addSubmitListener(ActionListener al) {
+        btnSubmit.addActionListener(al);
+    }
+
+    public void addClearListener(ActionListener al) {
+        btnClear.addActionListener(al);
+    }
+    
+    public void addLoadMarkListener(ActionListener al) {
+    	btnLoadMarks.addActionListener(al);
+    }
+}

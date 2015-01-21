@@ -1,0 +1,112 @@
+package com.studentprofile.view;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import javax.swing.JPanel;
+
+import com.studentprofile.StudentProfileMain;
+
+/** This class extends JPanel and is used to add all of the different components 
+ * of the second panel to one singular panel. This class offers functionality 
+ * to add marks for each panel text fields and return each instance of the 
+ * panels separately when needed.  
+ * */
+public class InputMarkPanels extends JPanel {
+	
+	//fields 
+    private final InputMarkFirstModulePanel firstModulePanel;
+    private final InputMarkSecondModulePanel secondModulePanel;
+    private final InputMarkThirdModulePanel thirdModulePanel;
+    private final InputMarkFourthModulePanel fourthModulePanel;
+    private final InputMarkFooterPanel footer;
+    private final InputMarkHeaderPanel header;
+    
+    /** Constructor instantiates all of the separate panels and using GridBagLayout
+     * and GridBagConstraints adds each panel to InputMarksPanel. The GridBagConstraints.fill
+     * is set at GridBagConstraints.BOTH which makes the controls stretch to their left/right. 
+     * */
+    public InputMarkPanels() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting header panel.\n";
+        header = new InputMarkHeaderPanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded header panel.\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting footer panel.\n";
+        footer = new InputMarkFooterPanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded footer panel\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting first module panel\n";
+        firstModulePanel = new InputMarkFirstModulePanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded first module panel\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting second module panel\n";
+        secondModulePanel = new InputMarkSecondModulePanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded second module panel\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting third module panel\n";
+        thirdModulePanel = new InputMarkThirdModulePanel();
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded third module panel\n";
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tGetting fourth module panel\n";
+        fourthModulePanel = new InputMarkFourthModulePanel();
+
+
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+
+        //this.setPreferredSize(new Dimension(300,500));
+        gbc.gridy = 0;
+        this.add(header, gbc);
+        gbc.gridy = 1;
+        this.add(firstModulePanel, gbc);
+        gbc.gridy = 2;
+        this.add(secondModulePanel, gbc);
+        gbc.gridy = 3;
+        this.add(thirdModulePanel, gbc);
+        gbc.gridy = 4;
+        this.add(fourthModulePanel, gbc);
+        gbc.gridy = 6;
+        this.add(footer, gbc);
+
+    }
+    
+    /** void addMarks, calls the add mark methods for each panel.*/
+    public void addMarks() {
+        firstModulePanel.addFirstModuleMarks();
+        secondModulePanel.addSecondModuleMarks();
+        thirdModulePanel.addThirdModuleMarks();
+        fourthModulePanel.addFourthModuleMarks();
+    }
+
+    /** InputMarkHeaderPanel getHeaderPanel, returns the current instance of InputMarkHeaderPanel
+     * @return the current instance of InputMarkHeaderPanel. */
+    public InputMarkHeaderPanel getHeaderPanel() {
+    	return header;
+    }
+    
+    /** InputMarkFirstModulePanel getFirstModulePanel, returns the current instance of InputMarkFirstModulePanel
+     * @return the current instance of InputMarkFirstModulePanel. */
+    public InputMarkFirstModulePanel getFirstModulePanel() {
+        return firstModulePanel;
+    }
+
+    /** InputMarkSecondModulePanel getSecondModulePanel, returns the current instance of InputMarkSecondModulePanel
+     * @return the current instance of InputMarkSecondModulePanel. */
+    public InputMarkSecondModulePanel getSecondModulePanel() {
+        return secondModulePanel;
+    }
+
+    /** InputMarkThirdModulePanel getThirdModulePanel, returns the current instance of InputMarkThirdModulePanel
+     * @return the current instance of InputMarkThirdModulePanel. */
+    public InputMarkThirdModulePanel getThirdModulePanel() {
+        return thirdModulePanel;
+    }
+    
+    /** InputMarkFourthModulePanel getFourthModulePanel, returns the current instance of InputMarkFourthModulePanel
+     * @return the current instance of InputMarkFourthModulePanel. */
+    public InputMarkFourthModulePanel getFourthModulePanel() {
+        return fourthModulePanel;
+    }
+    
+    /** InputMarkFooterPanel getFooterPanel, returns the current instance of InputMarkFooterPanel
+     * @return the current instance of InputMarkFooterPanel. */
+    public InputMarkFooterPanel getFooterPanel() {
+        return footer;
+    }
+}

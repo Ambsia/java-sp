@@ -1,0 +1,52 @@
+package com.studentprofile.view;
+
+import java.awt.Dimension;
+
+import javax.swing.JFrame;
+
+import com.studentprofile.StudentProfileMain;
+
+
+public final class StudentProfileFrame extends JFrame {
+
+    private final TabbedPaneLoader tabbedPane;
+    private final MenuBarLoader menuBar;
+
+    public StudentProfileFrame() {
+        this.setSize(new Dimension(750, 410));
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+
+        this.setTitle("Student Profile");
+
+        StudentProfileMain.loadingPhaseString += "\n\tGetting tabbed pane.\n";
+        tabbedPane = new TabbedPaneLoader();
+        StudentProfileMain.loadingPhaseString += "\tLoaded tabbed pane.\n";
+        StudentProfileMain.loadingPhaseString += "\tGetting menubar.\n";
+        menuBar = new MenuBarLoader();
+        StudentProfileMain.loadingPhaseString += "\tLoaded menubar.";
+        this.setJMenuBar(menuBar);
+
+        this.add(tabbedPane);
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+
+    }
+
+    public StudentProfileFrame getMainFrame() {
+        return this;
+    }
+
+    public TabbedPaneLoader getTabbedPane() {
+        return tabbedPane;
+    }
+
+    public MenuBarLoader getFrameMenuBar() {
+        return menuBar;
+    }
+
+    public void Exit() {
+        System.out.println("Exiting...");
+        System.exit(JFrame.EXIT_ON_CLOSE);
+    }
+}

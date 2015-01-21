@@ -1,0 +1,48 @@
+package com.studentprofile.view;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import com.studentprofile.StudentProfileMain;
+
+public final class InputMarkFooterPanel extends JPanel {
+    private final JButton btnSubmit;
+    private final JButton btnClear;
+
+    public InputMarkFooterPanel() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoading footer panel components.\n";
+        btnSubmit = new JButton("Submit");
+        btnClear = new JButton("Clear");
+
+
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 80);
+
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        this.add(btnSubmit, gbc);
+        gbc.gridx = 1;
+        gbc.insets = new Insets(2, 2, 2, 2);
+        this.add(btnClear, gbc);
+
+        StudentProfileMain.loadingPhaseString += "\t\t\t\t\tLoaded footer panel components.\n";
+    }
+
+ 
+    
+    public void addSubmitListener(ActionListener al) {
+        btnSubmit.addActionListener(al);
+    }
+
+    public void addClearListener(ActionListener al) {
+        btnClear.addActionListener(al);
+    }
+    
+   
+}

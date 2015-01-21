@@ -1,0 +1,111 @@
+package com.studentprofile.model;
+
+import com.studentprofile.StudentProfileMain;
+import com.studentprofile.controller.MessageBox;
+import com.studentprofile.view.JFileChooserLoader;
+
+import javax.swing.*;
+import java.io.*;
+
+
+public class StudentProfile implements Serializable {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private String pNumber;
+    private String studentName;
+    private Course course;
+
+    public StudentProfile() {
+        StudentProfileMain.loadingPhaseString += "\t\tLoading student profile model components.\n";
+        pNumber = "";
+        studentName = "";
+        course = null;
+        StudentProfileMain.loadingPhaseString += "\t\tLoaded student profile model components.\n";
+    }
+
+    public String getpNumber() {
+        return pNumber;
+    }
+
+    public void setpNumber(String pNumber) {
+        this.pNumber = pNumber;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    @Override
+    public String toString() {
+        return "StudentProfile:[pNumber=" + pNumber + ", studentName="
+                + studentName + ", course=" + course.actualToString() + "]";
+    }
+
+
+    public boolean saveToFile() throws IOException {
+        JFileChooserLoader fileDialog = new JFileChooserLoader();
+
+        int returnVal = fileDialog.showSaveDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileDialog.getSelectedFile();
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file + ".txt"));
+            try {
+                oos.writeObject(this);
+                System.out.println("Saving" + this.toString());
+                oos.flush();
+                MessageBox.infoMessageBox("Saving: " + file.getName() + ".");
+                return true;
+            } catch (IOException ioExcep) {
+                System.out.println("Error saving");
+                return false;
+            } finally {
+                oos.close();
+            }
+
+        }
+        else {
+            MessageBox.infoMessageBox("Save canceled.");
+            return false;
+        }
+
+
+    }
+
+    public boolean loadFromFile() throws IOException, ClassNotFoundException  {
+        JFileChooserLoader fileDialog = new JFileChooserLoader();
+        if (fileDialog.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            File file = fileDialog.getSelectedFile();   
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {   	 
+            	StudentProfile local = (StudentProfile) ois.readObject();
+            	this.setCourse(local.getCourse());
+            	this.setpNumber(local.getStudentName());
+            	this.setStudentName(local.getStudentName());
+            	ois.close();
+            	return true;
+            } catch (IOException | ClassNotFoundException exception) {
+                MessageBox.errorMessageBox("Error Loading.");
+                return false;
+            } 
+        } else {
+            MessageBox.infoMessageBox("Load canceled.");
+            return false;
+        }
+    }
+
+
+}

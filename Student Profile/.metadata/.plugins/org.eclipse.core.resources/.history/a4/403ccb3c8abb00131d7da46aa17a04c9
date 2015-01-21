@@ -1,0 +1,95 @@
+package com.studentprofile.view;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.text.PlainDocument;
+
+import com.studentprofile.StudentProfileMain;
+
+/** This class extends JPanel. This class is used as the third
+ * tab in the tab pane. This class consists of a JTextArea control,
+ * JButton control and a JLabel control. This class offers functionality
+ * to reset the panel to default, reset the text area scroll position to top,
+ * set label text, set text area text and get the text in the text area. */
+public final class OutputPanelLoader extends JPanel {
+
+	//fields
+    private final JTextArea overviewResults;
+    private final JButton btnSaveResults;
+    private final JLabel lblPassedFailed;
+
+    /** Constructor instantiates the JTextArea, JButton and JLabel
+     * and adds them to the panel. A JScrollPane is instantiated 
+     * and used to add a scroll bar to the text area. The controls
+     * are all added to the panel using GridBagLayout and GridBagConstraints
+     * to position the controls. */
+    public OutputPanelLoader() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoading third panel components.\n";
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 2);
+        lblPassedFailed = new JLabel();
+        lblPassedFailed.setFont(new Font("Arial", Font.BOLD, 30));
+        btnSaveResults = new JButton("Save results");
+        btnSaveResults.setToolTipText("Save these results to text file.");
+
+        overviewResults = new JTextArea(new PlainDocument());
+        overviewResults.setEditable(false);
+        overviewResults.setRows(15);
+        overviewResults.setColumns(50);
+        overviewResults.setLineWrap(true);
+        overviewResults.setWrapStyleWord(true);
+
+
+        JScrollPane areaScrollPane = new JScrollPane(overviewResults);
+        areaScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+
+        this.add(lblPassedFailed, gbc);
+        gbc.gridy = 1;
+        this.add(areaScrollPane, gbc);
+        gbc.gridy = 2;
+        this.add(btnSaveResults, gbc);
+
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded third panel components.\n";
+    }
+
+    /** void resetPanel, creates a colour and sets the background
+     * of the */
+    public void resetPanel() {
+        lblPassedFailed.setText("");
+    }
+
+    public void setLabelPassedFailedText(String text) {
+        lblPassedFailed.setText(text);
+    }
+
+    public void addSubmitListener(ActionListener al) {
+        btnSaveResults.addActionListener(al);
+    }
+
+    public void setTextField(String text) {
+        overviewResults.setText(text);
+    }
+
+    public String getOverviewText() {
+        return overviewResults.getText();
+    }
+
+    public void resetPosition() {
+        overviewResults.setCaretPosition(0);
+    }
+
+
+}

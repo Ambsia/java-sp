@@ -1,0 +1,24 @@
+package com.studentprofile.view;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+
+import com.studentprofile.StudentProfileMain;
+
+public final class JMenuSaveItem extends JMenuItem {
+    public JMenuSaveItem() {
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoading save item components.\n";
+        this.setText("Save Student Data");
+        this.setMnemonic(KeyEvent.VK_S);
+        this.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        StudentProfileMain.loadingPhaseString += "\t\t\t\tLoaded save item components.\n";
+    }
+
+    public void addSaveListener(ActionListener al) {
+        this.addActionListener(al);
+    }
+}

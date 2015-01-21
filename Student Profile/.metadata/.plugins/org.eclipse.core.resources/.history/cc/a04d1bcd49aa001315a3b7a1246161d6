@@ -1,0 +1,118 @@
+package com.studentprofile.view;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import com.studentprofile.model.Course;
+
+
+public class InputMarkPanelLoader extends JPanel  {
+
+	private JLabel firstModule;
+	private JLabel secondModule;
+	private JLabel thirdModule;
+	private JLabel fourthModule;
+
+	private JTextField firstModuleCourseWorkMark;
+	private JTextField secondModuleCourseWorkMark;
+	private JTextField thirdModuleCourseWorkMark;
+	private JTextField fourthModuleCourseWorkMark;
+
+	private JTextField firstModuleExamMark;
+	private JTextField secondModuleExamMark;
+	private JTextField thirdModuleExamMark;
+	private JTextField fourthModuleExamMark;
+
+	public InputMarkPanelLoader() {
+
+		this.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(2, 2, 2, 40);
+
+		firstModuleCourseWorkMark = new JTextField(5);
+		secondModuleCourseWorkMark = new JTextField(5);
+		thirdModuleCourseWorkMark = new JTextField(5);
+		fourthModuleCourseWorkMark = new JTextField(5);
+
+		firstModuleExamMark = new JTextField(5);
+		secondModuleExamMark = new JTextField(5);
+		thirdModuleExamMark = new JTextField(5);
+		fourthModuleExamMark = new JTextField(5);
+
+		firstModule = new JLabel("No Profile");
+		secondModule = new JLabel("No Profile");
+		thirdModule = new JLabel("No Profile");
+		fourthModule = new JLabel("No Profile");
+
+		gbc.gridy = 0;
+
+		gbc.gridx = 0;
+		this.add(new JLabel("Module"), gbc);	
+		gbc.gridx = 1;
+		this.add(new JLabel("Course Work Mark"), gbc);
+		gbc.gridx = 2;
+		this.add(new JLabel("Exam Mark"), gbc);
+
+		gbc.gridy = 1;
+
+		gbc.gridx = 0;
+		this.add(firstModule, gbc);
+		gbc.gridx = 1;
+		this.add(firstModuleCourseWorkMark, gbc);
+		gbc.gridx = 2;
+		this.add(firstModuleExamMark, gbc);
+
+		gbc.gridy = 2;
+
+		gbc.gridx = 0;
+		this.add(secondModule, gbc);
+		gbc.gridx = 1;
+		this.add(secondModuleCourseWorkMark, gbc);
+		gbc.gridx = 2;
+		this.add(secondModuleExamMark, gbc);
+
+		gbc.gridy = 3;
+
+		gbc.gridx = 0;
+		this.add(thirdModule, gbc);
+		gbc.gridx = 1;
+		this.add(thirdModuleCourseWorkMark, gbc);
+		gbc.gridx = 2;
+		this.add(thirdModuleExamMark, gbc);
+
+		gbc.gridy = 4;
+
+		gbc.gridx = 0;
+		this.add(fourthModule, gbc);
+		gbc.gridx = 1;
+		this.add(fourthModuleCourseWorkMark, gbc);
+		gbc.gridx = 2;
+		this.add(fourthModuleExamMark, gbc);
+
+	}
+
+
+	public void setDefaultModules() {
+
+	}
+
+	public void setModules(Course course) {
+		System.out.println(course.toString());
+		System.out.println(course.getModule("ctec2121"));
+		switch (course.getCourseName()) {
+		case "Computer Science":
+			this.firstModule.setText(course.getModule("ctec2121").toString());
+			break;
+		case "Software Engineering": break;
+		case "Computer Security": break;
+		case "Forensic Computing": break;
+
+
+		}
+	}
+}
